@@ -50,8 +50,7 @@ namespace Converters
         {
         static void Main (string[] args)
             {
-            IDictionary<string, object> values = new Dictionary<string, object> ();
-            IObjectAccessor dictAccessor = ObjectAccessor.Create (values);
+            var dictAccessor = ObjectAccessor.Create (new Dictionary<string, object> ());
             var o = new Model
                 {
                     Int = 1,
@@ -62,23 +61,10 @@ namespace Converters
                     Double = Double.Epsilon,
                 };
 
-            IObjectAccessor clrAccessor = ObjectAccessor.Create<Model> ();
-
+            var clrAccessor = ObjectAccessor.Create<Model> ();
+            var converter = new ObjectConverter<Model, IDictionary<string, object>> (clrAccessor, dictAccessor);
             Dictionary<string, object> dict = new Dictionary<string, object> ();
-            var dictParameter = Expression.Parameter (typeof (Dictionary<string, object>));
-            var objParameter = Expression.Parameter (typeof (Model));
-            List<Expression> setStatements = new List<Expression> ();
-            foreach (IPropertyAccessor getter in clrAccessor.Properties.Values)
-                {
-                IPropertyAccessor setter = dictAccessor.GetAccessor (getter.Name);
-                setStatements.Add (setter.Set (dictParameter, getter.Get (objParameter)));
-                }
-
-            var body = Expression.Block (setStatements);
-            var lambda = Expression.Lambda<Action<Model, Dictionary<string, object>>> (body, objParameter, dictParameter);
-            var func = lambda.Compile ();
-
-            func (o, dict);
+            converter.Convert (o, dict);
             }
         }
     }

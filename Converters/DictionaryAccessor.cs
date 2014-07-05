@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Converters
     {
-    class DictionaryAccessor<TKey, TValue> : IObjectAccessor
+    class DictionaryAccessor<TKey, TValue> : IObjectAccessor<IDictionary<TKey, TValue>>
         {
         private IDictionary<TKey, TValue> m_instance;
 

@@ -45,7 +45,9 @@
     <Compile Include="CollectionItemAccessor.cs" />
     <Compile Include="DictionaryAccessor.cs" />
     <Compile Include="IObjectAccessor.cs" />
+    <Compile Include="IObjectConverter.cs" />
     <Compile Include="IPropertyAccessor.cs" />
+    <Compile Include="ObjectConverter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace Converters
     {
-    class ClrObjectAccessor<T> : IObjectAccessor
+    class ClrObjectAccessor<T> : IObjectAccessor<T>
         where T : class
         {
         private static IDictionary<string, PropertyInfo> s_properties = typeof (T)
