@@ -41,6 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClrObjectAccessor.cs" />
+    <Compile Include="CollectionItemAccessor.cs" />
+    <Compile Include="DictionaryAccessor.cs" />
     <Compile Include="IObjectAccessor.cs" />
     <Compile Include="IPropertyAccessor.cs" />
     <Compile Include="Program.cs" />
