@@ -10,39 +10,22 @@ namespace Converters
     class ClrObjectAccessor<T> : IObjectAccessor<T>
         where T : class
         {
-        private static IDictionary<string, PropertyInfo> s_properties = typeof (T)
+        private static Lazy<IDictionary<string, IPropertyAccessor>> s_properties = new Lazy<IDictionary<string, IPropertyAccessor>> (() =>
+            typeof (T)
             .GetProperties (BindingFlags.Instance | BindingFlags.Public)
             .Where (p => p.CanRead && p.CanWrite)
-            .ToList ()
-            .ToDictionary (p => p.Name);
-
-        private Lazy<IDictionary<string, IPropertyAccessor>> m_properties;
-
-        public ClrObjectAccessor ()
-            {
-            m_properties = new Lazy<IDictionary<string, IPropertyAccessor>> (() =>
-                GetProperties ()
-                    .ToList ()
-                    .ToDictionary (p => p.Name));
-            }
-
-        public IDictionary<string, IPropertyAccessor> Properties
-            {
-            get
-                {
-                return m_properties.Value;
-                }
-            }
-
-        IEnumerable<IPropertyAccessor> GetProperties ()
-            {
-            foreach (var property in s_properties.Values)
-                yield return new ClrPropertyAccessor (property);
-            }
+            .Select (p => (IPropertyAccessor)new ClrPropertyAccessor (p))
+                .ToList ()
+                .ToDictionary (p => p.Name));
 
         public IPropertyAccessor GetAccessor (string name)
             {
-            return new ClrPropertyAccessor (s_properties[name]);
+            return s_properties.Value[name];
+            }
+
+        public IDictionary<string, IPropertyAccessor> GetProperties (T instance)
+            {
+            return s_properties.Value;
             }
         }
 

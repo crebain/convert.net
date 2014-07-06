@@ -23,7 +23,7 @@ namespace Converters
             var parameterFrom = Expression.Parameter (typeof (TFrom));
             var parameterTo = Expression.Parameter (typeof (TTo));
             List<Expression> setStatements = new List<Expression> ();
-            foreach (IPropertyAccessor getter in m_accessorFrom.Properties.Values)
+            foreach (IPropertyAccessor getter in m_accessorFrom.GetProperties (from).Values)
                 {
                 IPropertyAccessor setter = m_accessorTo.GetAccessor (getter.Name);
                 setStatements.Add (setter.Set (parameterTo, getter.Get (parameterFrom)));

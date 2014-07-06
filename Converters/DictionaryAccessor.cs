@@ -6,27 +6,10 @@ namespace Converters
     {
     class DictionaryAccessor<TKey, TValue> : IObjectAccessor<IDictionary<TKey, TValue>>
         {
-        private IDictionary<TKey, TValue> m_instance;
-
-        public DictionaryAccessor (IDictionary<TKey, TValue> instance)
+        private IEnumerable<IPropertyAccessor> GetPropertiesInternal (IDictionary<TKey, TValue> instance)
             {
-            m_instance = instance;
-            }
-
-        private IEnumerable<IPropertyAccessor> GetProperties ()
-            {
-            foreach (TKey key in m_instance.Keys)
-                yield return new CollectionItemAccessor<TKey, TValue> (key);
-            }
-
-        public IDictionary<string, IPropertyAccessor> Properties
-            {
-            get
-                {
-                return GetProperties ()
-                    .ToList ()
-                    .ToDictionary (p => p.Name);
-                }
+            foreach (TKey key in instance.Keys)
+                yield return new CollectionItemAccessor<TKey> (key, typeof (TValue));
             }
 
         public IPropertyAccessor GetAccessor (string name)
@@ -34,7 +17,14 @@ namespace Converters
             if (typeof (TKey) != typeof (string))
                 throw new NotSupportedException ("Only dictionaries with string keys are supported");
 
-            return new CollectionItemAccessor<string, TValue> (name);
+            return new CollectionItemAccessor<string> (name, typeof (TValue));
+            }
+
+        public IDictionary<string, IPropertyAccessor> GetProperties (IDictionary<TKey, TValue> instance)
+            {
+            return GetPropertiesInternal (instance)
+                .ToList ()
+                .ToDictionary (p => p.Name);
             }
         }
     }

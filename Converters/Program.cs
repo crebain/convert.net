@@ -50,7 +50,7 @@ namespace Converters
         {
         static void Main (string[] args)
             {
-            var dictAccessor = ObjectAccessor.Create (new Dictionary<string, object> ());
+            var dictAccessor = ObjectAccessor.Create<string, object> ();
             var o = new Model
                 {
                     Int = 1,

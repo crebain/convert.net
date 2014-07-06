@@ -4,12 +4,14 @@ using System.Reflection;
 
 namespace Converters
     {
-    class CollectionItemAccessor<TKey, TValue> : IPropertyAccessor
+    class CollectionItemAccessor<TKey> : IPropertyAccessor
         {
         private TKey m_key;
-        public CollectionItemAccessor (TKey key)
+        private Type m_valueType;
+        public CollectionItemAccessor (TKey key, Type valueType)
             {
             m_key = key;
+            m_valueType = valueType;
             }
 
         public string Name
@@ -31,7 +33,7 @@ namespace Converters
 
         public Expression Set (ParameterExpression instance, Expression value)
             {
-            return Expression.Assign (this.Get (instance), Expression.Convert (value, typeof (TValue)));
+            return Expression.Assign (this.Get (instance), Expression.Convert (value, m_valueType));
             }
         }
     }
